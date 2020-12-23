@@ -85,6 +85,14 @@ jobs:
       # Checkout code from git
       # Restore from cache
       # Your job code here
+       - checkout
+       - restore_cache:
+          keys: [frontend-test]
+       - run:
+          name: frontend test
+          command: |
+            cd frontend
+            npm run test
                 
   test-backend:
     docker:
