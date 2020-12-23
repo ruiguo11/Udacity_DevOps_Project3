@@ -87,13 +87,16 @@ jobs:
       # Your job code here
        - checkout
        - restore_cache:
-          keys: [frontend-build]
+          keys: [frontend-test]
        - run:
           name: frontend test
           command: |
             cd frontend
             npm install
             npm run test
+       - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-test
                 
   test-backend:
     docker:
@@ -105,13 +108,16 @@ jobs:
       # Your job code here
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-test]
       - run:
-          name: frontend test
+          name: backend test
           command: |
             cd backend
             npm install
             npm run test
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-test
             
   scan-frontend:
     docker:
@@ -123,13 +129,16 @@ jobs:
       # Your job code here
       - checkout
       - restore_cache:
-          keys: [frontend-build]
+          keys: [frontend-scan]
       - run:
           name: Scan frontend dependencies
           command: |
             cd frontend
             npm install
             npm audit -- audit-level=critical || true
+      - save_cache:
+          paths: [front/node_modules]
+          key: frontend-scan
 
 
   scan-backend:
@@ -142,13 +151,16 @@ jobs:
       # Your job code here
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-scan]
       - run:
           name: Scan backend dependencies
           command: |
             cd backend
             npm install
             npm audit -- audit-level=critical || true
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-scan
 
   deploy-infrastructure:
     docker:
