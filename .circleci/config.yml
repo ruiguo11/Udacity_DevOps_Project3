@@ -34,6 +34,8 @@ commands:
             
 jobs:
   build-frontend:
+    environment:
+      CODE: 123
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -44,7 +46,11 @@ jobs:
           name: Build front-end
           command: |
             # Your code here
-            exit 1
+            # exit 1
+            echo $CODE
+            cd frontend
+            npm install
+            npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -68,6 +74,7 @@ jobs:
   test-frontend:
     docker:
       # Docker image here
+           - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -76,6 +83,7 @@ jobs:
   test-backend:
     docker:
       # Docker image here
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -84,6 +92,7 @@ jobs:
   scan-frontend:
     docker:
       # Docker image here
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -92,6 +101,7 @@ jobs:
   scan-backend:
     docker:
       # Docker image here
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -99,7 +109,8 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      # Docker image here that supports AWS CLI
+      # Docker image here that supports AWS CLIcli
+      - image: amazon/aws-cli
     steps:
       # Checkout code from git
       - run:
@@ -170,6 +181,7 @@ jobs:
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
       # Checkout code from git
       - run:
@@ -231,6 +243,7 @@ jobs:
   cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
       # Checkout code from git
       - run:
@@ -240,7 +253,7 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
-            # your code here
+            # your code configure-infrastructure
       # Here's where you will add some code to rollback on failure  
 
 cleanup:
