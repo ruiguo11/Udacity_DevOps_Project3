@@ -304,6 +304,7 @@ jobs:
 cleanup:
     docker:
       # Docker image here
+      - image: cimg/base:2020.01
     steps:
       # Checkout code from git
       - run:
