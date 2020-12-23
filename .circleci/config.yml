@@ -301,7 +301,7 @@ jobs:
             # your code configure-infrastructure
       # Here's where you will add some code to rollback on failure  
 
-cleanup:
+  cleanup:
     docker:
       # Docker image here
       - image: cimg/base:2020.01
