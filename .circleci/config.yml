@@ -47,8 +47,8 @@ jobs:
           command: |
             # Your code here
             # exit 1
-            echo $CODE
             cd frontend
+            echo $CODE
             npm install
             npm run build
       - save_cache:
@@ -56,6 +56,8 @@ jobs:
           key: frontend-build
 
   build-backend:
+    environment:
+      CODE: 124
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -66,7 +68,11 @@ jobs:
           name: Back-end build
           command: |
              # Your code here
-             exit 1
+             # exit 1
+             cd backend
+             echo $CODE
+             npm install
+             npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -74,7 +80,7 @@ jobs:
   test-frontend:
     docker:
       # Docker image here
-           - image: circleci/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
