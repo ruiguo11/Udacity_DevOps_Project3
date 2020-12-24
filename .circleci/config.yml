@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  node: 'circleci/node:4.1'
+  slack: circleci/slack@4.1
 
 commands:
   destroy-environment:
@@ -8,20 +11,14 @@ commands:
       workflow_id:
         type: string
       
+      
     steps:
       - run:
-          name: Destroy environments <
-          when: on_fail
+          name: Destroy environments << parameters.workflow_id >>
           command: |
             # Your code here
-                  - run: echo "deploy my app"
-            - slack/notify:
-               event: fail
-               mentions: '@EngineeringTeam'
-               template: basic_fail_1
-            - slack/notify:
-              event: pass
-              template: success_tagged_deploy_1
+            - 
+              
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -43,6 +40,7 @@ commands:
             #  Add revert code here. You can find this in the Getting Started section.
               exit 1
             fi
+          when: on_fail
             
 jobs:
   build-frontend:
@@ -181,24 +179,25 @@ jobs:
       - image: amazon/aws-cli
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              #--tags project=your-tag \
-              # --stack-name "your back-end stack name with workflow id" \
-              # --parameter-overrides ID="your workflow id"  
-              exit 1
+              --tags project=udapeople \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
+              
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              #--tags project=your-tag \
-              # --stack-name "your front-end stack name with workflow id" \
-              # --parameter-overrides ID="your workflow id"  
-              exit 1
+              --tags project=udapeople \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}" 
+           
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -318,6 +317,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -334,6 +334,7 @@ jobs:
       - image: cimg/base:2020.01
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Get old stack workflow id
           command: |
