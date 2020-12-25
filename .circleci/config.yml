@@ -171,18 +171,18 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-scan
-    deploy:
-      docker:
-        - image: 'cimg/base:stable'
-      steps:
-        - run: echo "deploy my app"
-        - slack/notify:
+  deploy:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - run: echo "deploy my app"
+      - slack/notify:
             event: fail
             mentions: '@EngineeringTeam'
             template: basic_fail_1
-        - slack/notify:
+      - slack/notify:
             event: pass
-            template: success_tagged_deploy_1
+            template: success_tagged_deploy_1 
 
   deploy-infrastructure:
     docker:
