@@ -238,7 +238,7 @@ jobs:
       # Docker image here that supports Ansible
       - image: python.3.7-alpine3.1
         auth:
-          username: mydockerhub-user
+          username: $PYTHON_USERNAME
           password: $DOCKERHUB_PASSWORD
     steps:
       # Checkout code from git
