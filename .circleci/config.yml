@@ -236,7 +236,10 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: python.3.7-alpine3.11
+      - image: python.3.7-alpine3.1
+      auth:
+        username: mydockerhub-user
+        password: $DOCKERHUB_PASSWORD
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
