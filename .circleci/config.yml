@@ -16,7 +16,9 @@ commands:
           name: Destroy environments << parameters.workflow_id >>
           command: |
             # Your code here
-            - 
+            - aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
+            - aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
+          when: on_fail
               
 
   revert-migrations:
@@ -218,14 +220,19 @@ jobs:
           command: |
             # Your code here
             # exit 1
+             aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text >>.circleci/ansible/inventory
+              
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
-            - aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >>.circleci/ansible/inventory
+      # Here's where you will add some code to rollback on failure
+      
+      - destroy-environment:
+          workflow_id:  ${CIRCLE_WORKFLOW_ID:0:10}
+           
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
@@ -234,6 +241,11 @@ jobs:
       # Checkout code from git
       # Add ssh keys with fingerprint
       # attach workspace
+      - checkout
+      - add_ssh:
+        fingerprints: ["10:76:49:4e:63:db:7f:dc:24:09:b5:e7:fc:0e:4e:a4"]
+      - attach_workspace:
+        at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -252,6 +264,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
+      -checkout
       - run:
           name: Run migrations
           command: |
