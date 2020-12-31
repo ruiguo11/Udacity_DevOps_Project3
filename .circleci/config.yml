@@ -193,10 +193,6 @@ jobs:
     docker:
       # Docker image here that supports AWS CLIcli
       - image: amazon/aws-cli
-    branches:
-      only: 
-        - master
-        - /rc-.*/
     steps:
       # Checkout code from git
       - checkout
