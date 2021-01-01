@@ -268,8 +268,8 @@ jobs:
             # Your code here
             cd .circleci/ansible
             ansible-playbook -i iventory.txt configure-server.yml
-       - destroy-environment:
-            workflow_id: {$CIRCLE_WORKFLOW_ID: 0:10}
+      - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
        
       # Here's where you will add some code to rollback on failure      
 
