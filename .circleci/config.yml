@@ -10,15 +10,14 @@ commands:
       workflow_id:
         type: string
       
+      
     steps:
       - run:
           name: Destroy environments << parameters.workflow_id >>
           command: |
             # Your code here
-            # echo "Destroy environment <<<parameters.workflow_id>>"
-            # aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
-            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
+            - aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
+            - aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
           when: on_fail
               
 
@@ -221,10 +220,10 @@ jobs:
           command: |
             # Your code here
             # exit 1
-             - aws ec2 describe-instances \
-              -- filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:10}" \
+             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >>.circleci/ansible/inventory
+              
       - persist_to_workspace:
           root: ~/
           paths:
@@ -232,12 +231,15 @@ jobs:
       # Here's where you will add some code to rollback on failure
       
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
-          
+          workflow_id:  ${CIRCLE_WORKFLOW_ID:0:10}
+           
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: python:3.7-alpine3.11
+      - image: python.3.7-alpine3.1
+        auth:
+          username: $PYTHON_USERNAME
+          password: $DOCKERHUB_PASSWORD
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
@@ -380,7 +382,6 @@ jobs:
               # your code here
             fi
             
-
 workflows:
   default:
     jobs:
