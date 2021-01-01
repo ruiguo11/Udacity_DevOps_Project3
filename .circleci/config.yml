@@ -9,8 +9,6 @@ commands:
       # Add parameter here
       workflow_id:
         type: string
-      even:
-        type: enum
       
       
     steps:
@@ -32,6 +30,11 @@ commands:
       workflow_id:
         type: string
     steps:
+      - restore_cache:
+          keys: [backend-build]
+      - attach_workspace:
+          at: ~/project/backend
+
       - run:
           name: Revert migrations
           # Add when this will run
@@ -237,7 +240,7 @@ jobs:
       
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
-          event: on_fail
+          
   
            
   configure-infrastructure:
