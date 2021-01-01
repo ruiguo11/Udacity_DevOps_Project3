@@ -9,6 +9,8 @@ commands:
       # Add parameter here
       workflow_id:
         type: string
+      event:
+        type: string
       
       
     steps:
@@ -18,7 +20,7 @@ commands:
             # Your code here
             - aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
             - aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
-          when: on_fail
+          when: event
               
 
   revert-migrations:
@@ -221,8 +223,9 @@ jobs:
             # Your code here
             # exit 1
              aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:10}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >>.circleci/ansible/inventory
+              --output text >>.circleci/ansible/inventory.txt
               
       - persist_to_workspace:
           root: ~/
@@ -232,6 +235,7 @@ jobs:
       
       - destroy-environment:
           workflow_id:  ${CIRCLE_WORKFLOW_ID:0:10}
+          event: on_fail
            
   configure-infrastructure:
     docker:
