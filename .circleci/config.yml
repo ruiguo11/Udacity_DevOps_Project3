@@ -154,7 +154,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm audit --audit-level=critical
+            npm audit --audit-level=critical --force
       - save_cache:
           paths: [front/node_modules]
           key: frontend-scan
