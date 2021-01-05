@@ -268,11 +268,11 @@ jobs:
             # Your code here
             cd .circleci/ansible
             ansible-playbook -i iventory.txt configure-server.yml
+      
+      # Here's where you will add some code to rollback on failure      
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
        
-      # Here's where you will add some code to rollback on failure      
-
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
@@ -285,12 +285,20 @@ jobs:
           command: |
             # Your code here
             #exit 1
+            cd ~/project/backend
+            npm install
+            npm run migrations:generate -- --n migration.txt
+            
+            
       - run:
           name: Send migration results to memstash
           command: |
             # Your code here
-            exit 1
-     # Here's where you will add some code to rollback on failure      
+            # exit 1
+            
+     # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
 
   deploy-frontend:
     docker:
