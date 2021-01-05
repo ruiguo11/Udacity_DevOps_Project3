@@ -43,10 +43,11 @@ commands:
             SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
+              cd ~/project/backend
+              npm install
             #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              # exit 1
+              npm run migrations:revert
             fi
           when: on_fail
             
@@ -285,7 +286,7 @@ jobs:
           command: |
             # Your code here
             #exit 1
-            cd ~/project/backend
+            cd backend
             npm install
             npm run migrations:generate -- --n migration.txt
             
@@ -295,6 +296,7 @@ jobs:
           command: |
             # Your code here
             # exit 1
+            cd backend
             
      # Here's where you will add some code to rollback on failure
       - destroy-environment:
