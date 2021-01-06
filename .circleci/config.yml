@@ -45,9 +45,11 @@ commands:
             then
               cd ~/project/backend
               npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              # exit 1
+              # Add revert code here. You can find this in the Getting Started section.
               npm run migrations:revert
+              
+              exit 1
+              
             fi
           when: on_fail
             
@@ -289,6 +291,7 @@ jobs:
             cd backend
             npm install
             npm run migrations:generate -- --n migration.txt
+            echo "running migration"
             
             
       - run:
@@ -297,7 +300,15 @@ jobs:
             # Your code here
             # exit 1
             cd backend
+            echo "Send migration results to memstash"
+            if grep -s "has been executed successfully." migration.txt
+            then
+              curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            else
+              curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             
+            fi
+            exit 1
      # Here's where you will add some code to rollback on failure
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
