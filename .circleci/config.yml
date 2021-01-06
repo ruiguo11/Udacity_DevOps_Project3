@@ -277,12 +277,14 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run migrations
           command: |
             # Your code here
             #exit 1
-            cd backend
+
             npm install
             
             echo ENVIROMENT=development > "backend/.env"
