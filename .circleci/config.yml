@@ -74,7 +74,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - slack/notify-on-failure
+
 
   build-backend:
     environment:
@@ -97,7 +97,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      - slack/notify-on-failure
+
 
   test-frontend:
     docker:
@@ -120,7 +120,7 @@ jobs:
        - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
-       - slack/notify-on-failure
+
                 
   test-backend:
     docker:
@@ -142,7 +142,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test
-      - slack/notify-on-failure
+
             
   scan-frontend:
     docker:
@@ -164,7 +164,7 @@ jobs:
       - save_cache:
           paths: [front/node_modules]
           key: frontend-scan
-      - slack/notify-on-failure
+
 
 
   scan-backend:
@@ -187,7 +187,6 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-scan
-      - slack/notify-on-failure
           
 
 
