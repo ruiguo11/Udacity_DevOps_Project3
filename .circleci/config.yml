@@ -40,15 +40,14 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            
+            SUCCESS = curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request GET --data https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             if(( $SUCCESS==1 )); 
             then
-              cd ~/project/backend
+              cd backend
               npm install
               # Add revert code here. You can find this in the Getting Started section.
               npm run migrations:revert
-              
-              exit 1
               
             fi
           when: on_fail
@@ -75,6 +74,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify-on-failure
 
   build-backend:
     environment:
@@ -97,6 +97,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slack/notify-on-failure
 
   test-frontend:
     docker:
@@ -119,6 +120,7 @@ jobs:
        - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
+       - slack/notify-on-failure
                 
   test-backend:
     docker:
@@ -140,6 +142,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test
+      - slack/notify-on-failure
             
   scan-frontend:
     docker:
@@ -161,6 +164,7 @@ jobs:
       - save_cache:
           paths: [front/node_modules]
           key: frontend-scan
+      - slack/notify-on-failure
 
 
   scan-backend:
@@ -183,18 +187,9 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-scan
-  deploy:
-    executor:
-      name: node/default
-    steps:
-      - checkout
-      - node/install-packages
-      - run:
-          command: npm run deploy
-      - slack/notify:
-          channel: ABCXYZ
-          event: fail
-          template: basic_fail_1
+      - slack/notify-on-failure
+          
+
 
   deploy-infrastructure:
     docker:
@@ -301,14 +296,8 @@ jobs:
             # exit 1
             cd backend
             echo "Send migration results to memstash"
-            if grep -q "has been executed successfully." migration.txt
-            then
-              curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-            else
-              curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             
-            fi
-            exit 1
      # Here's where you will add some code to rollback on failure
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
