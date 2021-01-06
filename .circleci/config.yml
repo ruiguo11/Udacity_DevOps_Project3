@@ -282,6 +282,8 @@ jobs:
           command: |
             # Your code here
             #exit 1
+            cd backend
+            npm install
             
             echo ENVIROMENT=development > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
@@ -295,10 +297,8 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             
             
-            cd backend
-            npm install           
-                   
-            npm run migrations 
+                                        
+            npm run migrations > migration.txt
             
             
       - run:
