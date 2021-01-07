@@ -320,6 +320,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -344,6 +345,12 @@ jobs:
       # Checkout code from git
       # Add ssh keys with fingerprint
       # attach workspace
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["10:76:49:4e:63:db:7f:dc:24:09:b5:e7:fc:0e:4e:a4"]
+      - attach_workspace:
+          at: ~/
+      
       - run:
           name: Install dependencies
           command: |
@@ -353,6 +360,9 @@ jobs:
           command: |
             # your code here
       # Here's where you will add some code to rollback on failure  
+      
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
 
   smoke-test:
     docker:
@@ -377,6 +387,8 @@ jobs:
           command: |
             # your code here
       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
 
   cloudfront-update:
     docker:
@@ -394,6 +406,8 @@ jobs:
           command: |
             # your code configure-infrastructure
       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
 
   cleanup:
     docker:
