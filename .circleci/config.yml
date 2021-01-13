@@ -287,9 +287,9 @@ jobs:
              
             chown -R $USER:$USER backend  
             cd backend
-            npm install
+           
          
-            touch /.env
+            touch .env
             
             echo TYPEORM_CONNECTION=postgres >> "/.env"
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "/.env"
@@ -300,6 +300,8 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "/.env"
+            
+            touch migration.txt
                                              
             npm run migrations > migration.txt
           
