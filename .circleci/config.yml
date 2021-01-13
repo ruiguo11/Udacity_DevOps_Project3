@@ -17,9 +17,9 @@ commands:
           command: |
             # Your code here
             echo "Destryping environment: << parameters.workflow_id >>"
-            - aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive
-            - aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
-            - aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
+            aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
           when: on_fail
               
 
@@ -285,16 +285,17 @@ jobs:
             #exit 1
             cd backend
             npm install
+            touch backend/.env
             
-            echo TYPEORM_CONNECTION=postgres >> ./.env
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ./.env
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ./.env
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ./.env
-            echo TYPEORM_HOST=$TYPEORM_HOST >> ./.env
-            echo TYPEORM_PORT=$TYPEORM_PORT >> ./.env
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ./.env
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ./.env
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ./.env
+            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             
             
                                         
