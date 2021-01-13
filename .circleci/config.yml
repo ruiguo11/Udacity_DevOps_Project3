@@ -286,6 +286,7 @@ jobs:
             #exit 1
             cd backend
             npm install
+            chown user public/
             touch /.env
             
             echo TYPEORM_CONNECTION=postgres >> "/.env"
