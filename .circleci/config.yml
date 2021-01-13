@@ -278,10 +278,9 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      
-      -run:
-        name: install depencies
-          sudo apt-get install awscli
+      - run:
+          name: install depencies
+          command: sudo apt-get install awscli
     
       - run:
           name: Run migrations
