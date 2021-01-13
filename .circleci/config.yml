@@ -284,9 +284,11 @@ jobs:
           command: |
             # Your code here
             #exit 1
+             
+            chown -R $USER:$USER backend  
             cd backend
             npm install
-            chown -R $USER:$USER /path/to/directory
+         
             touch /.env
             
             echo TYPEORM_CONNECTION=postgres >> "/.env"
