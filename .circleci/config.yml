@@ -304,6 +304,7 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME
             
             cd backend
+            touch .env
             npm install
             npm run build
            
@@ -317,9 +318,9 @@ jobs:
           command: |
             # Your code here
             # exit 1
-            cd backend
-            echo "Send migration results to memstash"
-            curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            #cd backend
+            #echo "Send migration results to memstash"
+            #curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             
      # Here's where you will add some code to rollback on failure
       - destroy-environment:
