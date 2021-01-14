@@ -310,6 +310,7 @@ jobs:
             touch migration.txt
                                              
             npm run migrations > migration.txt
+            no_output_timeout: 30m
           
       - run:
           name: Send migration results to memstash
