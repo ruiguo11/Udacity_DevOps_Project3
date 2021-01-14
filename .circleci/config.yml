@@ -284,8 +284,17 @@ jobs:
           command: |
             # Your code here
             #exit 1
-             
-            chown -R $USER:$USER backend  
+            echo ENVIRONMENT=production
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES
+            echo TYPEORM_HOST=$TYPEORM_HOST
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD
+            echo TYPEORM_PORT=$TYPEORM_PORT
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME
+            
             cd backend
            
 
