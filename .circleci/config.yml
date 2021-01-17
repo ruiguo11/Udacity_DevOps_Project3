@@ -341,7 +341,7 @@ jobs:
           command: |
             # your code here
             echo "${BACKEND_IP}"
-            BACKEND_IP=$(ec2 describe-instances \
+            BACKEND_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:10}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
@@ -369,7 +369,8 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-       - image: python.3.7-alpine3.11
+       - image: python:3.7-alpine3.11
+      
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
