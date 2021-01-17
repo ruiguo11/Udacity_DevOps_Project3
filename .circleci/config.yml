@@ -40,7 +40,7 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             
             SUCCESS = curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-            echo "SUCCESS"
+
             if(( $SUCCESS==1 )); 
             then
               cd backend
@@ -382,8 +382,6 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["10:76:49:4e:63:db:7f:dc:24:09:b5:e7:fc:0e:4e:a4"]
-      - attach_workspace:
-          at: ~/
       
       - run:
           name: Install dependencies
@@ -419,14 +417,19 @@ jobs:
           name: Get backend url
           command: |
             # your code here
+            BACKEND_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:10}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            curl "${API_URL}"
       - run:
           name: Backend smoke test.
           command: |
             # your code here
-            URL = API_URL
-            if curl -s --head ${URL}
+            
+            if curl -s --head ${API_URL}
             then 
               return 0
             else 
@@ -436,6 +439,15 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
+            URL = "http://udapeople-${CIRCLE_WORKFLOW_ID:0:10}.s3-website-us-west-2.amazonaws.com"
+            if curl -s --head ${URL}
+            then 
+              return 0
+            else 
+              return 1
+            fi
+            
+            
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
@@ -454,10 +466,17 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            
       - run:
           name: Update cloudfront distribution
           command: |
             # your code configure-infrastructure
+            aws cloudformation update-stack\
+              --template-file circleci/files/cloudfront.yml \
+              --tags project=udapeople \
+              --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:10}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:10}"
+            
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
@@ -476,8 +495,8 @@ jobs:
           name: Get old stack workflow id
           command: |
             # your code here
-            export OldWorkflowID="the id here"
-            export STACKS=[] #put the list of stacks here
+            #export OldWorkflowID="the id here"
+            #export STACKS=[] #put the list of stacks here
       - run:
           name: Remove old stacks and files
           command: |
