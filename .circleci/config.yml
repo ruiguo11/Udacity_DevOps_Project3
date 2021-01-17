@@ -48,7 +48,6 @@ commands:
               npm install
               # Add revert code here. You can find this in the Getting Started section.
               npm run migrations:revert
-              
             fi
           when: on_fail
             
@@ -237,7 +236,8 @@ jobs:
       
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
-      - revert-migrations
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
           
   
            
@@ -270,8 +270,10 @@ jobs:
       
       # Here's where you will add some code to rollback on failure      
       - destroy-environment:
-           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
-      - revert-migrations
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      
        
   run-migrations:
     docker:
@@ -318,8 +320,10 @@ jobs:
             fi
      # Here's where you will add some code to rollback on failure
       - destroy-environment:
-           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
-      - revert-migrations
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      
 
   deploy-frontend:
     docker:
@@ -357,8 +361,10 @@ jobs:
             
       # Here's where you will add some code to rollback on failure   
       - destroy-environment:
-           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
-      - revert-migrations
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      
                     
   deploy-backend:
     docker:
@@ -389,7 +395,9 @@ jobs:
       # Here's where you will add some code to rollback on failure        
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
-      - revert-migrations
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      
 
   smoke-test:
     docker:
@@ -426,7 +434,9 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
-      - revert-migrations
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      
 
   cloudfront-update:
     docker:
@@ -446,7 +456,9 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
-      - revert-migrations
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      
 
   cleanup:
     docker:
