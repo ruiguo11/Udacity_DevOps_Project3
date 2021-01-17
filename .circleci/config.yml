@@ -237,6 +237,7 @@ jobs:
       
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations
           
   
            
@@ -270,6 +271,7 @@ jobs:
       # Here's where you will add some code to rollback on failure      
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations
        
   run-migrations:
     docker:
@@ -306,13 +308,18 @@ jobs:
           command: |
             # Your code here
             # exit 1
-            #cd backend
-            #echo "Send migration results to memstash"
-            #curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-            
+            cd backend
+            echo "Send migration results to memstash"
+            if grep -q "has been exectued successfully." migration.txt
+            then
+              curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            else
+              echo -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            fi
      # Here's where you will add some code to rollback on failure
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations
 
   deploy-frontend:
     docker:
@@ -329,13 +336,29 @@ jobs:
           name: Get backend url
           command: |
             # your code here
+            echo "${BACKEND_IP}"
+            BACKEND_IP=$(ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:10}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+            
       - run:
           name: Deploy frontend objects
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure      
+            cd frontend
+            npm install
+            npm run build
+            aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:10}
+            
+           
+            
+      # Here's where you will add some code to rollback on failure   
+      - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:10}"
+      - revert-migrations
                     
   deploy-backend:
     docker:
@@ -355,14 +378,18 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+             apk add --update ansible
       - run:
           name: Deploy backend
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
-      
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt playbook.yml
+            
+      # Here's where you will add some code to rollback on failure        
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
+      - revert-migrations
 
   smoke-test:
     docker:
@@ -374,14 +401,24 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            apk add --update curl
       - run:
           name: Get backend url
           command: |
             # your code here
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
       - run:
           name: Backend smoke test.
           command: |
             # your code here
+            URL = API_URL
+            if curl -s --head ${URL}
+            then 
+              return 0
+            else 
+              return 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
@@ -389,6 +426,7 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
+      - revert-migrations
 
   cloudfront-update:
     docker:
@@ -408,6 +446,7 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:10}
+      - revert-migrations
 
   cleanup:
     docker:
