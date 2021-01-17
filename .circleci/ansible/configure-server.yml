@@ -13,7 +13,7 @@
   pre_tasks:
     - name: "wait 600 seconds for target connection to become reachable/usable."
       # Your code here
-      wait_for_connection:
+      wait_for_connection: 100
 
     - name: "install python for Ansible."
       # Your code here
@@ -26,3 +26,12 @@
     - configure-prometheus-node-exporter
     - configure-server
     
+  environment:
+    TYPEORM_CONNECTION: "{{ lookup('env','TYPEORM_CONNECTION') }}"
+    TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
+    TYPEORM_HOST: "{{ lookup('env','TYPEORM_HOST') }}"
+    TYPEORM_PORT: 5432
+    TYPEORM_USERNAME: "{{ lookup('env','TYPEORM_USERNAME') }}"
+    TYPEORM_PASSWORD: "{{ lookup('env','TYPEORM_PASSWORD') }}"
+    TYPEORM_DATABASE: "{{ lookup('env','TYPEORM_DATABASE') }}"
+    TYPEORM_MIGRATIONS: .src/migrations/*.ts
