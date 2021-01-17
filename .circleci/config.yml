@@ -32,8 +32,6 @@ commands:
     steps:
       - restore_cache:
           keys: [backend-build]
-      - attach_workspace:
-          at: ~/project/backend
 
       - run:
           name: Revert migrations
@@ -41,7 +39,8 @@ commands:
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             
-            SUCCESS = curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request GET --data https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            SUCCESS = curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            echo "SUCCESS"
             if(( $SUCCESS==1 )); 
             then
               cd backend
@@ -332,10 +331,14 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
             # your code here
+ 
       - run:
           name: Get backend url
           command: |
@@ -355,6 +358,7 @@ jobs:
             cd frontend
             npm install
             npm run build
+            
             aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:10}
             
            
@@ -391,7 +395,7 @@ jobs:
           command: |
             # your code here
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt playbook.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml
             
       # Here's where you will add some code to rollback on failure        
       - destroy-environment:
