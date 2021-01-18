@@ -41,7 +41,7 @@ commands:
             
             SUCCESS = $(curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
 
-            if(( $SUCCESS==1 )); 
+            if(( ${SUCCESS}==1 )); 
             then
               cd backend
               npm install
@@ -336,6 +336,12 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            
+            # get install script and pass it to execute: 
+            curl -sL https://deb.nodesource.com/setup_4.x | bash // this two line tye to solve the npm not found problem
+            yum -y install nodejs
+            
+            
             yum -y install tar gzip
  
       - run:
