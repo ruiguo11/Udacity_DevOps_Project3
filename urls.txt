@@ -1,0 +1,5 @@
+URL01: https://github.com/ruiguo11/Udacity_DevOps_Project3
+URL02: Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
+URL03: Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03]
+URL04: Public URLs to deployed application back-end in EC2
+URL05: Public URL to your Prometheus Server
