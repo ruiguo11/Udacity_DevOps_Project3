@@ -331,13 +331,12 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      
-      - attach_workspace:
-          at: ~/
+     
       - run:
           name: Install dependencies
           command: |
             # your code here
+            tar -xzf archive.tar.gz
  
       - run:
           name: Get backend url
