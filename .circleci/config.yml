@@ -408,8 +408,8 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
-            sudo apt-get update
-            sudo apt-get -qq install awscli curl nodejs
+            apk add --update curl nodejs 
+            pip install awscli
             
             
       - run:
