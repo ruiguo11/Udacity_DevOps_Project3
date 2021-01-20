@@ -40,7 +40,7 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             
             SUCCESS = $(curl -H "Content-Type: text/plain" -H "token: 80a49aa9-e9ef-4519-9b7e-c1809da27d04" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
-            if(( $SUCCESS==1 )); 
+            if(( $(SUCCESS)==1 )); 
             then
               cd backend
               npm install
@@ -332,8 +332,8 @@ jobs:
           command: |
             # your code here
             yum -y install tar gzip
-            sudo npm install -g typescript
-            sudo apt-get update
+        
+          
             
  
       - run:
