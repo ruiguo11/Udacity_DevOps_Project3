@@ -409,7 +409,9 @@ jobs:
           command: |
             # your code here
             apk add --update curl nodejs 
-            apk add --install awscli
+            sudo apt-get update 
+            sudo apt-get install awscli
+            
          
             
             
