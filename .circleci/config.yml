@@ -409,7 +409,8 @@ jobs:
           command: |
             # your code here
             apk add --update curl nodejs 
-            pip install awscli
+            apk add --update awscli
+         
             
             
       - run:
