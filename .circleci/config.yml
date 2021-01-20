@@ -408,7 +408,10 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
-            apk add --update curl
+            sudo apt-get update
+            sudo apt-get -qq install awscli curl nodejs
+            
+            
       - run:
           name: Get backend url
           command: |
@@ -461,6 +464,7 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            
             
       - run:
           name: Update cloudfront distribution
