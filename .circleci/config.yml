@@ -409,7 +409,7 @@ jobs:
           command: |
             # your code here
             apk add --update curl nodejs 
-            apk add --update awscli
+            apk add --install awscli
          
             
             
