@@ -332,6 +332,9 @@ jobs:
           command: |
             # your code here
             yum -y install tar gzip
+            sudo npm install -g typescript
+            sudo apt-get update
+            
  
       - run:
           name: Get backend url
@@ -350,6 +353,7 @@ jobs:
           command: |
             # your code here
             cd frontend
+            npm install
             npm run build
             aws s3 sync ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:10}
                      
