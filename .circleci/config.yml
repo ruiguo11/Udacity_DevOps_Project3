@@ -414,7 +414,7 @@ jobs:
             # your code here
             cd backend
             apk add --update curl nodejs 
-            apk add --update nsible
+            apk add --update ansible
             apk add --update py-pip
             pip install awscli
 
