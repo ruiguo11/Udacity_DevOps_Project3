@@ -1,5 +1,5 @@
 -name: Create working directory
-  files:
+  file:
     path: /home/ubuntu/backend
     state: directory
 
