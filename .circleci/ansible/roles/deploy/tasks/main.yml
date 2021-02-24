@@ -1,4 +1,4 @@
--name: Create working directory
+- name: Create working directory
   file:
     path: /home/ubuntu/backend
     state: directory
@@ -7,11 +7,13 @@
   copy: 
     src: /root/project/backend
     dest: /home/ubuntu
+    
 - name: Update npm
   become: yes
   shell: |
     cd /home/ubuntu/backend
     pm install -g npm@latest
+    
 - name: intall package dependencies
   become: yes
   shell: |
