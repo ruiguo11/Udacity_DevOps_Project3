@@ -407,7 +407,9 @@ jobs:
       # Checkout code from git
       - checkout
       - attach_workspace:
-          at: ~/
+          at: ~/project.
+          paths:
+            - .circleci
       - run:
           name: Install dependencies
           command: |
