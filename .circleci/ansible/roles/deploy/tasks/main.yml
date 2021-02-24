@@ -1,8 +1,3 @@
-- name: Create working directory
-  file:
-    path: /home/ubuntu/backend
-    state: directory
-
 - name: Transfer backend files
   copy: 
     src: /root/project/backend
