@@ -1,0 +1,33 @@
+-name: Create working directory
+ files:
+  path: /home/ubuntu/backend
+  state: directory
+
+- name: Transfer backend files
+  copy: 
+    src: /root/project/backend
+    dest: /home/ubuntu
+- name: Update npm
+  become: yes
+  shell: |
+    cd /home/ubuntu/backend
+    pm install -g npm@latest
+- name: intall package dependencies
+  become: yes
+  shell: |
+    cd /home/ubuntu/backend   
+    ls -la
+    npm install
+    
+- name: build package
+   become: yes
+   shell: |
+    cd /home/ubuntu/backend
+    npm run build
+    
+- name: Run backend
+  become: yes
+  shell: |
+    cd /home/ubuntu/backend
+    pm2 start npm --name backend -- start
+    pm2 ls
