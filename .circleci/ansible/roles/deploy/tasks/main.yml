@@ -23,8 +23,8 @@
     npm audit fix --audit-level=critical --force
     
 - name: build package
-   become: yes
-   shell: |
+  become: yes
+  shell: |
     cd /home/ubuntu/backend
     npm run build
     
