@@ -385,8 +385,9 @@ jobs:
           command: |
             # your code here
              apk add --update ansible
-             apk add install tar gzip
+             apk add --update tar gzip
              apk add --update curl nodejs 
+           
 
       - run:
           name: Deploy backend
