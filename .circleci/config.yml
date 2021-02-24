@@ -385,6 +385,7 @@ jobs:
           command: |
             # your code here
              apk add --update ansible
+             yum -y install tar gzip
       - run:
           name: Deploy backend
           command: |
@@ -418,6 +419,7 @@ jobs:
             apk add --update curl nodejs 
             apk add --update ansible
             apk add --update py-pip
+            sudo apt install curl
             pip install awscli
 
 
