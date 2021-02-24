@@ -385,7 +385,7 @@ jobs:
           command: |
             # your code here
              apk add --update ansible
-             yum -y install tar gzip
+             apk -add install tar gzip
       - run:
           name: Deploy backend
           command: |
