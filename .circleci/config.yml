@@ -394,7 +394,7 @@ jobs:
           name: Check folders
           command: |
             echo $(pwd)
-            ls /home/ubuntu/backend
+            ls /root/project
       - run:
           name: Deploy backend
           command: |
