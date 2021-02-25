@@ -1,7 +1,19 @@
+
+- name: "upgrade packages."
+  become: yes
+  apt:
+    upgrade: "yes"
+- name: "install dependencies."
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    update_cache: yes
+    
 - name: Transfer backend files
   copy: 
     src: /root/project/backend
     dest: /home/ubuntu
+    force: no
     
 - name: Update npm
   become: yes
