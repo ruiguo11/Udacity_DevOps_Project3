@@ -387,8 +387,14 @@ jobs:
              apk add --update ansible
              apk add --update tar gzip
              apk add --update curl nodejs 
-           
-
+      - run:
+          name: Install Open SSH
+          command: apk add openssh-client  
+      - run:
+          name: Check folders
+          command: |
+            echo $(pwd)
+            ls /root/project/backend
       - run:
           name: Deploy backend
           command: |
