@@ -1,4 +1,7 @@
-
+- name: Creates directory
+  file:
+    path: /home/ubuntu/backend
+    state: directory
 - name: "upgrade packages."
   become: yes
   apt:
